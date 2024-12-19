@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编号分组工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            justify-content: flex-start;
+            margin: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+        }
+        textarea {
+            width: 250px;
+            height: 600px;
+            font-size: 18px; 
+            font-family: Times New Roman, Times, serif;
+            background-color: #f2f2f2;  /* 配置为浅灰色 */
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        #button-group {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: absolute;
+            left: 600px; 
+            top: 120px; /* Adjust this to set distance from top */
+            bottom: 290px; /* Adjust this to set distance from bottom */
+        }
+        button {
+            font-family: 黑体;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 12px 25px;
+            border-radius: 5px;
+            border: none;
+            width: 180px;
+        }
+        .generate {
+            background-color: #000080;
+            color: #ffffff;
+        }
+        .copy {
+            background-color: #FF4500;
+            color: #ffffff;
+        }
+        .clear {
+            background-color: #8B0000;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h1>编号分组工具</h1>
+    <div class="container">
+        <div class="input-group">
+            <label for="inputData">请输入编号，每行一个：</label>
+            <textarea id="inputData" rows="10" cols="50" placeholder="在这里输入编号，每行一个"></textarea>
+        </div>
+        <div class="input-group">
+            <label for="output">输出结果：</label>
+            <textarea id="output" rows="10" cols="50" readonly></textarea>
+        </div>
+        <div id="button-group">
+            <button class="generate" onclick="groupData(2)" aria-label="两个一组">两个一组</button>
+            <button class="generate" onclick="groupData(3)" aria-label="三个一组">三个一组</button>
+            <button class="generate" onclick="groupData(4)" aria-label="四个一组">四个一组</button>
+            <button class="generate" onclick="groupData(5)" aria-label="五个一组">五个一组</button>
+            <button class="generate" onclick="groupData(10)" aria-label="十个一组">十个一组</button>
+            <button class="copy" onclick="copyResult()" aria-label="复制结果">复制结果</button>
+            <button class="clear" onclick="clearContent()" aria-label="清除内容">清除内容</button>
+        </div>
+    </div>
+
+    <script>
+        function groupData(groupSize) {
+            const inputData = document.getElementById('inputData').value.trim().split('\n');
+            const output = [];
+            let startIndex = 0;
+
+            // Check if the first line is a header
+            if (isNaN(parseInt(inputData[0].slice(-3)))) {
+                output.push(inputData[0]);
+                startIndex = 1;
+            }
+
+            for (let i = startIndex; i < inputData.length; i += groupSize) {
+                const group = inputData.slice(i, i + groupSize);
+                if (group.length > 1) {
+                    const numLength = group[0].match(/\d+$/)[0].length;
+                    const prefix = group[0].slice(0, -numLength);
+                    const startNum = parseInt(group[0].slice(-numLength));
+                    const endNum = parseInt(group[group.length - 1].slice(-numLength));
+                    output.push(`${prefix}${startNum.toString().padStart(numLength, '0')}-${endNum.toString().padStart(numLength, '0')}`);
+                } else {
+                    output.push(group[0]);
+                }
+            }
+
+            document.getElementById('output').value = output.join('\n');
+        }
+
+        function copyResult() {
+            const outputTextArea = document.getElementById('output');
+            navigator.clipboard.writeText(outputTextArea.value).then(() => {
+                alert('结果已复制');
+            }).catch(err => {
+                alert('复制失败');
+            });
+        }
+
+        function clearContent() {
+            document.getElementById('inputData').value = '';
+            document.getElementById('output').value = '';
+        }
+    </script>
+</body>
+</html>
