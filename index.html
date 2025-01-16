@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>编号分组工具</title>
+    <title>地牌分组工具</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,10 +59,28 @@
             background-color: #8B0000;
             color: #ffffff;
         }
+        #sample-table {
+            margin-left: 400px; /* Adjusted margin to move the table to the right */
+            margin-top: 20px;
+        }
+        #sample-table table {
+            border-collapse: collapse;
+            width: 200px;
+            font-family: Arial, sans-serif;
+        }
+        #sample-table th, #sample-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        #sample-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-    <h1>编号分组工具</h1>
+    <h1>地牌分组工具</h1>
     <div class="container">
         <div class="input-group">
             <label for="inputData">请输入编号，每行一个：</label>
@@ -80,6 +98,38 @@
             <button class="generate" onclick="groupData(10)" aria-label="十个一组">十个一组</button>
             <button class="copy" onclick="copyResult()" aria-label="复制结果">复制结果</button>
             <button class="clear" onclick="clearContent()" aria-label="清除内容">清除内容</button>
+        </div>
+        <div id="sample-table">
+            <table>
+                <thead>
+                              输入内容示例
+                    <tr>
+                        <th>田间编号</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>GY0001</td></tr>
+                    <tr><td>GY0002</td></tr>
+                    <tr><td>GY0003</td></tr>
+                    <tr><td>GY0004</td></tr>
+                    <tr><td>GY0005</td></tr>
+                    <tr><td>GY0006</td></tr>
+                    <tr><td>GY0007</td></tr>
+                    <tr><td>GY0008</td></tr>
+                    <tr><td>GY0009</td></tr>
+                    <tr><td>GY0010</td></tr>
+                    <tr><td>GY0011</td></tr>
+                    <tr><td>GY0012</td></tr>
+                    <tr><td>GY0013</td></tr>
+                    <tr><td>GY0014</td></tr>
+                    <tr><td>GY0015</td></tr>
+                    <tr><td>GY0016</td></tr>
+                    <tr><td>GY0017</td></tr>
+                    <tr><td>GY0018</td></tr>
+                    <tr><td>GY0019</td></tr>
+                    <tr><td>GY0020</td></tr>
+                    </tbody>
+            </table>
         </div>
     </div>
 
