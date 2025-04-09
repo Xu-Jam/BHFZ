@@ -5,77 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地牌分组工具</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            padding: 25px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: #f5f6fa; 
+        }
+        h1 { 
+            color: #2c3e50; 
+            border-bottom: 3px solid #3498db; 
+            padding-bottom: 12px; 
+            margin-bottom: 25px; 
+            text-align: center;
         }
         .container {
-            display: flex;
-            justify-content: flex-start;
-            margin: 20px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 40px;
+            align-items: start;
         }
         .input-group {
             display: flex;
             flex-direction: column;
-            margin: 10px;
-        }
-        textarea {
-            width: 250px;
-            height: 600px;
-            font-size: 18px; 
-            font-family: Times New Roman, Times, serif;
-            background-color: #f2f2f2;  /* 配置为浅灰色 */
+            position: relative;
         }
         label {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #34495e;
         }
-        #button-group {
+        textarea { 
+            width: 100%; 
+            height: 450px; 
+            padding: 18px; 
+            border: 2px solid #dcdde1; 
+            border-radius: 8px;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            resize: vertical;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+        textarea:focus { 
+            border-color: #3498db; 
+            outline: none; 
+        }
+        .button-group {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            position: absolute;
-            left: 600px; 
-            top: 120px; /* Adjust this to set distance from top */
-            bottom: 290px; /* Adjust this to set distance from bottom */
+            gap: 20px;
+            padding-top: 60px;
         }
         button {
-            font-family: 黑体;
-            font-weight: bold;
-            font-size: 18px;
-            padding: 12px 25px;
-            border-radius: 5px;
+            height: 50px;
+            padding: 0 30px;
+            background: #3498db;
+            color: white;
             border: none;
-            width: 180px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        .generate {
-            background-color: #000080;
-            color: #ffffff;
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
-        .copy {
-            background-color: #FF4500;
-            color: #ffffff;
+        button:active { transform: translateY(1px); }
+        .generate { 
+            background-color: #3498db;
         }
-        .clear {
-            background-color: #8B0000;
-            color: #ffffff;
+        .copy { 
+            background-color: #e67e22;
+        }
+        .clear { 
+            background-color: #e74c3c;
+        }
+        /* Sample table styling */
+        #sample-area {
+            margin-top: 40px;
+        }
+        #sample-area h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #34495e;
         }
         #sample-table {
-            margin-left: 400px; /* Adjusted margin to move the table to the right */
-            margin-top: 20px;
-        }
-        #sample-table table {
             border-collapse: collapse;
-            width: 200px;
+            width: 100%;
             font-family: Arial, sans-serif;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
         #sample-table th, #sample-table td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
         }
         #sample-table th {
-            background-color: #f2f2f2;
+            background-color: #3498db;
+            color: #fff;
             font-weight: bold;
+        }
+        /* Custom placeholder styling */
+        .example-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 450px;
+            padding: 18px;
+            box-sizing: border-box;
+            font-family: 'Fira Code', Consolas, monospace;
+            font-size: 14px;
+            color: #777;
+            pointer-events: none; /* Makes it non-selectable */
+            white-space: pre-wrap;
+            display: none; /* Hidden by default, shown when textarea is empty */
+            background: transparent;
+            z-index: 10;
+            margin-top: 35px; /* Adjusted for label height */
+        }
+        /* Responsive design */
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding-top: 20px;
+                padding-bottom: 20px;
+            }
+            button {
+                width: 100%;
+                max-width: 200px;
+            }
         }
     </style>
 </head>
@@ -84,76 +158,144 @@
     <div class="container">
         <div class="input-group">
             <label for="inputData">请输入编号，每行一个：</label>
-            <textarea id="inputData" rows="10" cols="50" placeholder="在这里输入编号，每行一个"></textarea>
+            <textarea id="inputData"></textarea>
+            <div id="example-overlay" class="example-text">田间编号
+GY0001
+GY0002
+GY0003
+GY0004
+GY0005
+GY0006
+GY0007
+GY0008
+GY0009
+GY0010
+GY0011
+GY0012
+GY0013
+GY0014
+GY0015
+GY0016
+GY0017
+GY0018
+GY0019
+GY0020</div>
         </div>
+        
+        <div class="button-group">
+            <button class="generate" onclick="groupData(2)">
+                <span class="icon">🔄</span>两个一组
+            </button>
+                      <button class="generate" onclick="groupData(4)">
+                <span class="icon">🔄</span>四个一组
+            </button>
+            <button class="generate" onclick="groupData(5)">
+                <span class="icon">🔄</span>五个一组
+            </button>
+            <button class="generate" onclick="groupData(10)">
+                <span class="icon">🔄</span>十个一组
+            </button>
+            <button class="copy" onclick="copyResult()">
+                <span class="icon">⎘</span>复制结果
+            </button>
+            <button class="clear" onclick="clearContent()">
+                <span class="icon">×</span>清除内容
+            </button>
+        </div>
+
         <div class="input-group">
             <label for="output">输出结果：</label>
-            <textarea id="output" rows="10" cols="50" readonly></textarea>
-        </div>
-        <div id="button-group">
-            <button class="generate" onclick="groupData(2)" aria-label="两个一组">两个一组</button>
-            <button class="generate" onclick="groupData(3)" aria-label="三个一组">三个一组</button>
-            <button class="generate" onclick="groupData(4)" aria-label="四个一组">四个一组</button>
-            <button class="generate" onclick="groupData(5)" aria-label="五个一组">五个一组</button>
-            <button class="generate" onclick="groupData(10)" aria-label="十个一组">十个一组</button>
-            <button class="copy" onclick="copyResult()" aria-label="复制结果">复制结果</button>
-            <button class="clear" onclick="clearContent()" aria-label="清除内容">清除内容</button>
-        </div>
-        <div id="sample-table">
-            <table>
-                <thead>
-                              输入内容示例
-                    <tr>
-                        <th>田间编号</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>GY0001</td></tr>
-                    <tr><td>GY0002</td></tr>
-                    <tr><td>GY0003</td></tr>
-                    <tr><td>GY0004</td></tr>
-                    <tr><td>GY0005</td></tr>
-                    <tr><td>GY0006</td></tr>
-                    <tr><td>GY0007</td></tr>
-                    <tr><td>GY0008</td></tr>
-                    <tr><td>GY0009</td></tr>
-                    <tr><td>GY0010</td></tr>
-                    <tr><td>GY0011</td></tr>
-                    <tr><td>GY0012</td></tr>
-                    <tr><td>GY0013</td></tr>
-                    <tr><td>GY0014</td></tr>
-                    <tr><td>GY0015</td></tr>
-                    <tr><td>GY0016</td></tr>
-                    <tr><td>GY0017</td></tr>
-                    <tr><td>GY0018</td></tr>
-                    <tr><td>GY0019</td></tr>
-                    <tr><td>GY0020</td></tr>
-                    </tbody>
-            </table>
+            <textarea id="output" readonly></textarea>
         </div>
     </div>
+    
+    <div id="sample-area">
+      </div>
 
     <script>
+        const EXAMPLE_INPUT = `田间编号
+GY0001
+GY0002
+GY0003
+GY0004
+GY0005
+GY0006
+GY0007
+GY0008
+GY0009
+GY0010
+GY0011
+GY0012
+GY0013
+GY0014
+GY0015
+GY0016
+GY0017
+GY0018
+GY0019
+GY0020`;
+
+        // Handle custom placeholder visibility
+        const inputElement = document.getElementById('inputData');
+        const exampleOverlay = document.getElementById('example-overlay');
+        
+        // Initial check on page load
+        window.onload = function() {
+            updateExampleVisibility();
+        }
+        
+        // Update the placeholder visibility based on input content
+        function updateExampleVisibility() {
+            if (inputElement.value.trim() === '') {
+                exampleOverlay.style.display = 'block';
+            } else {
+                exampleOverlay.style.display = 'none';
+            }
+        }
+        
+        // Event listeners for input changes
+        inputElement.addEventListener('input', updateExampleVisibility);
+        inputElement.addEventListener('focus', function() {
+            // Hide example when focused even if empty
+            exampleOverlay.style.display = 'none';
+        });
+        
+        inputElement.addEventListener('blur', updateExampleVisibility);
+
         function groupData(groupSize) {
-            const inputData = document.getElementById('inputData').value.trim().split('\n');
+            let inputData = inputElement.value.trim();
+            
+            if (!inputData) {
+                inputData = EXAMPLE_INPUT;
+                inputElement.value = inputData; // Fill in the actual textarea
+                updateExampleVisibility(); // Update overlay visibility
+            }
+            
+            inputData = inputData.split('\n');
             const output = [];
             let startIndex = 0;
 
-            // Check if the first line is a header
-            if (isNaN(parseInt(inputData[0].slice(-3)))) {
-                output.push(inputData[0]);
+            // Check if the first line is a header (assumes header doesn't end with digits)
+            if (inputData.length > 0 && !/\d+$/.test(inputData[0])) {
+                output.push(inputData[0]); // Keep the header
                 startIndex = 1;
             }
 
             for (let i = startIndex; i < inputData.length; i += groupSize) {
                 const group = inputData.slice(i, i + groupSize);
                 if (group.length > 1) {
-                    const numLength = group[0].match(/\d+$/)[0].length;
-                    const prefix = group[0].slice(0, -numLength);
-                    const startNum = parseInt(group[0].slice(-numLength));
-                    const endNum = parseInt(group[group.length - 1].slice(-numLength));
-                    output.push(`${prefix}${startNum.toString().padStart(numLength, '0')}-${endNum.toString().padStart(numLength, '0')}`);
-                } else {
+                    const numMatch = group[0].match(/(\D*)(\d+)$/);
+                    if (numMatch) {
+                        const prefix = numMatch[1];
+                        const numLength = numMatch[2].length;
+                        const startNum = parseInt(numMatch[2]);
+                        const endNum = parseInt(group[group.length - 1].match(/\d+$/)[0]);
+                        output.push(`${prefix}${startNum.toString().padStart(numLength, '0')}-${endNum.toString().padStart(numLength, '0')}`);
+                    } else {
+                        // If no number pattern found, just join with hyphens
+                        output.push(group.join('-'));
+                    }
+                } else if (group.length === 1) {
                     output.push(group[0]);
                 }
             }
@@ -163,16 +305,28 @@
 
         function copyResult() {
             const outputTextArea = document.getElementById('output');
-            navigator.clipboard.writeText(outputTextArea.value).then(() => {
-                alert('结果已复制');
-            }).catch(err => {
-                alert('复制失败');
-            });
+            if (outputTextArea.value.trim() === '') {
+                alert('没有可复制的内容');
+                return;
+            }
+            
+            outputTextArea.select();
+            try {
+                document.execCommand('copy');
+                alert('结果已复制到剪贴板');
+            } catch (err) {
+                navigator.clipboard.writeText(outputTextArea.value).then(() => {
+                    alert('结果已复制到剪贴板');
+                }).catch(err => {
+                    alert('复制失败，请手动选择并复制');
+                });
+            }
         }
 
         function clearContent() {
-            document.getElementById('inputData').value = '';
+            inputElement.value = '';
             document.getElementById('output').value = '';
+            updateExampleVisibility(); // Update overlay visibility
         }
     </script>
 </body>
